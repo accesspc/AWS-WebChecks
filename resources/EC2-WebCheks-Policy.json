@@ -1,0 +1,36 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "dynamodb:BatchGetItem",
+                "logs:CreateLogStream",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:Query",
+                "dynamodb:UpdateItem",
+                "logs:PutLogEvents"
+            ],
+            "Resource": [
+                "arn:aws:dynamodb:eu-west-2:574535523516:table/webChecks",
+                "arn:aws:logs:eu-west-2:574535523516:*"
+            ]
+        },
+        {
+            "Sid": "VisualEditor1",
+            "Effect": "Allow",
+            "Action": [
+                "cloudwatch:PutMetricData",
+                "cloudwatch:GetMetricData",
+                "cloudwatch:GetMetricStatistics",
+                "cloudwatch:ListMetrics",
+                "logs:CreateLogGroup"
+            ],
+            "Resource": "*"
+        }
+    ]
+}

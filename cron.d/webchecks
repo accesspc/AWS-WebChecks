@@ -1,0 +1,3 @@
+# cron.d/webchecks
+* *	* * *	root	( /usr/bin/python3 /opt/aws-webchecks/webchecks.py >> /var/log/webchecks.log 2>&1 )
+

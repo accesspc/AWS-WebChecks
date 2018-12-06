@@ -1,0 +1,9 @@
+/var/log/webchecks.log {
+       daily
+       rotate 7
+       delaycompress
+       compress
+       notifempty
+       missingok
+}
+
