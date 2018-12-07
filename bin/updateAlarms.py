@@ -18,7 +18,10 @@ with open(os.path.join(dirname, '../etc/config.json')) as config_json:
     config = json.load(config_json)
 
 # Define objects for: DynamoDB and CloudWatch
-session = boto3.Session(profile_name=config['aws_profile_name'], region_name=config['aws_region'])
+if (len(config['aws_profile_name']) == 0):
+    session = boto3.Session(region_name=config['aws_region'])
+else:
+    session = boto3.Session(profile_name=config['aws_profile_name'], region_name=config['aws_region'])
 ddb = session.resource('dynamodb')
 cw = session.client('cloudwatch')
 

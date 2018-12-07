@@ -38,7 +38,10 @@ vid = vhost + ":" + vport + "/" + vip
 print("New Id: %s (using %r)" % (vid, vhttps))
 
 # Define objects for: DynamoDB
-session = boto3.Session(profile_name=config['aws_profile_name'], region_name=config['aws_region'])
+if (len(config['aws_profile_name']) == 0):
+    session = boto3.Session(region_name=config['aws_region'])
+else:
+    session = boto3.Session(profile_name=config['aws_profile_name'], region_name=config['aws_region'])
 ddb = session.client('dynamodb')
 
 # Put it in the table
