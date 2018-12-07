@@ -1,4 +1,4 @@
-# WebCheck scripts
+# WebChecks scripts
 
 ## How does it work
 Hostname/IP/Port/HTTPS collections sit in AWs/DynamoDB table
