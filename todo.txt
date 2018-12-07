@@ -1,1 +1,3 @@
 * If config fields are empty
+* Make it totally serverless
+

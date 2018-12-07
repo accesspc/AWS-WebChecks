@@ -20,4 +20,11 @@ AWS/CloudWatch alarms looks at metrics over past 5 minutes, averages
 * run ./install.sh
 * watch how the magic happens
 
+## config.json
+* "aws_region": AWS region name (eu-west-1)
+* "aws_profile_name": Leave blank to use EC2 role or default `aws configure` profile
+* "dynamodb_table": DynamoDB Table name
+* "dynamodb_namespace": DynamoDB Namespace
+* "sns_topic_alarm_arn": SNS topic for ALARM notifications
+* "sns_topic_ok_arn": SNS topic for OK notifications (usually the same, can be other or empty[TBD])
 
