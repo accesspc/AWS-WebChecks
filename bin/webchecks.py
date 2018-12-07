@@ -2,7 +2,7 @@
 # WebChecks script to poll websites and put stats into CloudWatch
 #
 # @author: Robertas.Reiciunas
-# @date: 20181205
+# @date: 20181206
 #
 
 # Imports
@@ -13,8 +13,9 @@ from pprint import pprint
 import subprocess
 
 # Define objects for: DynamoDB and CloudWatch
-ddb = boto3.resource('dynamodb', region_name='eu-west-2')
-cw = boto3.client('cloudwatch', region_name='eu-west-2')
+session = boto3.Session(profile_name='precedent', region_name='eu-west-2')
+ddb = session.resource('dynamodb')
+cw = session.client('cloudwatch')
 
 # Fetch / scan full table
 table = ddb.Table('webChecks')
