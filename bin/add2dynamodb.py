@@ -36,18 +36,28 @@ if (correct != "y"):
 
 # Define objects for: DynamoDB
 session = boto3.Session(profile_name='precedent', region_name='eu-west-2')
-ddb = session.resource('dynamodb')
+ddb = session.client('dynamodb')
 
-# Build request, action it and get response
-table = ddb.Table('webChecks')
-request = {
-    'Item': {
-        'Id': vid,
-        'Host': vhost,
-        'Https': vhttps,
-        'IP': vip,
-        'Port': vport
-    }
-}
-response = table.put_item(**request)
+# Put it in the table
+response = ddb.put_item(
+    Item={
+        'Id': {
+            'S': vid
+        },
+        'Host': {
+            'S': vhost
+        },
+        'Https': {
+            'BOOL': vhttps
+        },
+        'IP': {
+            'S': vip
+        },
+        'Port': {
+            'S': vport
+        }
+    },
+    ReturnConsumedCapacity='TOTAL',
+    TableName='webChecks'
+)
 pprint(response)
