@@ -16,14 +16,15 @@
                 "logs:PutLogEvents"
             ],
             "Resource": [
-                "arn:aws:dynamodb:eu-west-2:574535523516:table/webChecks",
-                "arn:aws:logs:eu-west-2:574535523516:*"
+                "arn:aws:dynamodb:eu-west-1:574535523516:table/webChecks",
+                "arn:aws:logs:eu-west-1:574535523516:*"
             ]
         },
         {
             "Sid": "VisualEditor1",
             "Effect": "Allow",
             "Action": [
+                "cloudwatch:PutMetricAlarm",
                 "cloudwatch:PutMetricData",
                 "cloudwatch:GetMetricData",
                 "cloudwatch:GetMetricStatistics",
