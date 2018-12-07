@@ -10,8 +10,14 @@
 from __future__ import print_function
 import boto3
 import json
+import os
 import sys, getopt
 from pprint import pprint
+
+# Read configuration file
+dirname = os.path.dirname(__file__)
+with open(os.path.join(dirname, '../etc/config.json')) as config_json:
+    config = json.load(config_json)
 
 # Read input from command line
 if (len(sys.argv) == 2):
@@ -30,12 +36,9 @@ else:
 vhttps = bool(vhttps)
 vid = vhost + ":" + vport + "/" + vip
 print("New Id: %s (using %r)" % (vid, vhttps))
-correct = input("Is this correct (y/N)?")
-if (correct != "y"):
-    raise Exception("You failed!")
 
 # Define objects for: DynamoDB
-session = boto3.Session(profile_name='precedent', region_name='eu-west-2')
+session = boto3.Session(profile_name=config['aws_profile_name'], region_name=config['aws_region'])
 ddb = session.client('dynamodb')
 
 # Put it in the table
@@ -58,6 +61,6 @@ response = ddb.put_item(
         }
     },
     ReturnConsumedCapacity='TOTAL',
-    TableName='webChecks'
+    TableName=config['dynamodb_table']
 )
 pprint(response)

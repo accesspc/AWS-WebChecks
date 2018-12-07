@@ -2,23 +2,29 @@
 # WebChecks script to poll websites and put stats into CloudWatch
 #
 # @author: Robertas.Reiciunas
-# @date: 20181206
+# @date: 20181207
 #
 
 # Imports
 from __future__ import print_function
 import boto3
 import json
-from pprint import pprint
+import os
 import subprocess
+from pprint import pprint
+
+# Read configuration file
+dirname = os.path.dirname(__file__)
+with open(os.path.join(dirname, '../etc/config.json')) as config_json:
+    config = json.load(config_json)
 
 # Define objects for: DynamoDB and CloudWatch
-session = boto3.Session(profile_name='precedent', region_name='eu-west-2')
+session = boto3.Session(profile_name=config['aws_profile_name'], region_name=config['aws_region'])
 ddb = session.resource('dynamodb')
 cw = session.client('cloudwatch')
 
 # Fetch / scan full table
-table = ddb.Table('webChecks')
+table = ddb.Table(config['dynamodb_table'])
 response = table.scan()
 
 # Loop through items/rows
@@ -57,7 +63,7 @@ for i in response['Items']:
     
     # Put metric data into CloudWatch
     ip_port = ':'.join([i['IP'], i['Port']])
-    cw.put_metric_data(
+    response = cw.put_metric_data(
         MetricData=[
             {
                 'MetricName': 'ResponseTime',
@@ -105,6 +111,6 @@ for i in response['Items']:
                 'Value': int(retval)
             }
         ],
-        Namespace='WebChecks'
+        Namespace=config['dynamodb_namespace']
     )
 
