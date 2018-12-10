@@ -44,7 +44,7 @@ for i in response['Items']:
         Namespace=config['dynamodb_namespace'],
         Period=300,
         Statistic='Average',
-        Threshold=0.2,
+        Threshold=0.8,
         ActionsEnabled=True,
         OKActions=[
             config['sns_topic_ok_arn']
