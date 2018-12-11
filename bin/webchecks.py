@@ -45,11 +45,10 @@ def add2DynamoDB(item = None):
             https = True
         ip = item['IP']
         port = item['Port']
-        client = item['Client']
         print("Processing arg: %s / %s : %s" % (host, ip, port))
     elif (len(sys.argv) == 2):
         # Read input from command line
-        host, https, ip, port, client = sys.argv[1].split(',')
+        host, https, ip, port = sys.argv[1].split(',')
         if ('false' == https or 'False' == https or '0' == https or 0 == https):
             https = False
         else:
@@ -76,9 +75,6 @@ def add2DynamoDB(item = None):
             },
             'Port': {
                 'S': port
-            },
-            'Client': {
-                'S': client
             }
         },
         ReturnConsumedCapacity='TOTAL',
@@ -135,8 +131,8 @@ def dumpDynamoDBTable():
     response = ddb.scan(TableName=config['dynamodb_table'])
 
     for i in response['Items']:
-        print("'%s','%s','%s','%s','%s'" % 
-            (i['Host']['S'], i['Https']['BOOL'], i['IP']['S'], i['Port']['S'], i['Client']['S'])
+        print("'%s','%s','%s','%s'" % 
+            (i['Host']['S'], i['Https']['BOOL'], i['IP']['S'], i['Port']['S'])
         )
     
     print("DynamoDB ack: %r" % response['ResponseMetadata']['HTTPStatusCode'])
