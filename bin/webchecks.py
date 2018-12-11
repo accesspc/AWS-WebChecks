@@ -23,21 +23,37 @@ if (len(config['aws_region']) == 0):
 if (len(config['aws_profile_name']) == 0):
     session = boto3.Session(region_name=config['aws_region'])
 else:
-    session = boto3.Session(region_name=config['aws_region'], profile_name=config['aws_profile_name'])
+    session = boto3.Session(region_name=config['aws_region'],
+        profile_name=config['aws_profile_name'])
 if (len(config['dynamodb_table']) == 0):
     raise Exception("DynamoDB Table name not defined")
 
 ddb = session.client('dynamodb')
 cw = session.client('cloudwatch')
 
-def add2DynamoDB(host = None, https = None, ip = None, port = None):
-    if (port is not None):
-        https = bool(https)
+#
+# Add 2 DynamoDB table
+#
+def add2DynamoDB(item = None):
+    if (item is not None):
+        # Passed as argument
+        host = item['Host']
+        https = item['Https']
+        if ('false' == https or 'False' == https or '0' == https or 0 == https):
+            https = False
+        else:
+            https = True
+        ip = item['IP']
+        port = item['Port']
+        client = item['Client']
         print("Processing arg: %s / %s : %s" % (host, ip, port))
     elif (len(sys.argv) == 2):
         # Read input from command line
-        host, https, ip, port = sys.argv[1].split(',')
-        https = bool(https)
+        host, https, ip, port, client = sys.argv[1].split(',')
+        if ('false' == https or 'False' == https or '0' == https or 0 == https):
+            https = False
+        else:
+            https = True
     else:
         raise Exception("Wrong argument(s) provided")
     siteid = host + ":" + port + "/" + ip
@@ -60,6 +76,9 @@ def add2DynamoDB(host = None, https = None, ip = None, port = None):
             },
             'Port': {
                 'S': port
+            },
+            'Client': {
+                'S': client
             }
         },
         ReturnConsumedCapacity='TOTAL',
@@ -67,8 +86,12 @@ def add2DynamoDB(host = None, https = None, ip = None, port = None):
     )
     print("DynamoDB ack: %r" % response['ResponseMetadata']['HTTPStatusCode'])
 
+    # add alarm 2 cloudwatch
     addAlarm2CloudWatch(host, https, ip, port)
 
+#
+# Add Alarm 2 CloudWatch
+#
 def addAlarm2CloudWatch(host, https, ip, port):
     alarmname = "Status %s / %s:%s" % (host, ip, port)
     ip_port = ':'.join([ip, port])
@@ -105,18 +128,22 @@ def addAlarm2CloudWatch(host, https, ip, port):
 
     print("CloudWatch Alarm ack: %r" % response['ResponseMetadata']['HTTPStatusCode'])
 
+#
+# Dump DynamoDB table
+#
 def dumpDynamoDBTable():
     response = ddb.scan(TableName=config['dynamodb_table'])
 
     for i in response['Items']:
-        host = i['Host']['S']
-        https = i['Https']['BOOL']
-        ip = i['IP']['S']
-        port = i['Port']['S']
-        siteid = i['SiteId']['S']
+        print("'%s','%s','%s','%s','%s'" % 
+            (i['Host']['S'], i['Https']['BOOL'], i['IP']['S'], i['Port']['S'], i['Client']['S'])
+        )
+    
+    print("DynamoDB ack: %r" % response['ResponseMetadata']['HTTPStatusCode'])
 
-        print("'%s','%s','%s','%s'" % (host, https, ip, port))
-
+#
+# Run Checks
+#
 def runChecks():
     # Fetch / scan full table
     response = ddb.scan(TableName=config['dynamodb_table'])
@@ -213,4 +240,15 @@ def runChecks():
             ],
             Namespace=config['dynamodb_namespace']
         )
+
+#
+# Update ALL alarms
+#
+def updateAllAlarms():
+    # Fetch / scan full table
+    response = ddb.scan(TableName=config['dynamodb_table'])
+
+    # Loop through items/rows
+    for i in response['Items']:
+        addAlarm2CloudWatch(i['Host']['S'], i['Https']['BOOL'], i['IP']['S'], i['Port']['S'])
 

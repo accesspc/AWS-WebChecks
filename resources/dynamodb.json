@@ -3,5 +3,6 @@
   "Https": true,
   "SiteId": "precedent.com:443/195.224.12.11",
   "IP": "195.224.12.11",
-  "Port": "443"
+  "Port": "443",
+  "Client": "Precedent"
 }
