@@ -1,8 +1,0 @@
-{
-    "aws_region": "eu-west-1",
-    "aws_profile_name": "precedent",
-    "dynamodb_table": "webChecks",
-    "dynamodb_namespace": "WebChecks",
-    "sns_topic_ok_arn": "arn:aws:sns:eu-west-1:574535523516:WebChecks",
-    "sns_topic_alarm_arn": "arn:aws:sns:eu-west-1:574535523516:WebChecks"
-}
