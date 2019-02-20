@@ -1,0 +1,8 @@
+{
+    "aws_region": "eu-west-1",
+    "aws_profile_name": "_PROFILE_",
+    "dynamodb_table": "webChecks",
+    "dynamodb_namespace": "WebChecks",
+    "sns_topic_ok_arn": "arn:aws:sns:eu-west-1:_AWS_ACCOUNT_NO_:WebChecks",
+    "sns_topic_alarm_arn": "arn:aws:sns:eu-west-1:_AWS_ACCOUNT_NO_:WebChecks"
+}
