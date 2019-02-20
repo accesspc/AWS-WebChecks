@@ -1,7 +1,7 @@
 # WebChecks scripts
 
 ## How does it work
-Hostname/IP/Port/HTTPS collections sit in AWs/DynamoDB table
+Hostname/IP/Port/HTTPS collections sit in AWS/DynamoDB table
 
 Cron script scans the table, runs nagios/check_http command against the web
 
@@ -27,4 +27,9 @@ AWS/CloudWatch alarms looks at metrics over past 5 minutes, averages
 * "dynamodb_namespace": DynamoDB Namespace
 * "sns_topic_alarm_arn": SNS topic for ALARM notifications
 * "sns_topic_ok_arn": SNS topic for OK notifications (usually the same, can be other or empty[TBD])
+
+## TBD
+* lambda snsToSlack deployment script
+* If config fields are empty
+* Make it totally serverless - not quite possible due to nagios-plugins/check_http package/file
 

@@ -1,3 +1,0 @@
-* If config fields are empty
-* Make it totally serverless - not quite possible due to nagios-plugins/check_http package/file
-
